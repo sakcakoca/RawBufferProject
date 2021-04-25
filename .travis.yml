@@ -43,7 +43,7 @@ before_script:
 script:
   - mkdir build
   - cd build
-  - cmake -D ENABLE_COVERAGE:BOOL=TRUE -D DWARNINGS_AS_ERRORS:BOOL=FALSE ../
+  - cmake -D ENABLE_COVERAGE:BOOL=TRUE -D WARNINGS_AS_ERRORS:BOOL=FALSE ../
   - cmake --build . -- -j2
   - ctest -j2
 
