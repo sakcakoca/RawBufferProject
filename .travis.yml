@@ -35,7 +35,7 @@ jobs:
         apt:
           packages: 
             - python3-pip
-            - clang-12
+            - clang
 
 
 before_script:
