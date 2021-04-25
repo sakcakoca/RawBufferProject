@@ -18,9 +18,11 @@ build_script:
 
     dir
 
+- MSBuild RawBufferProject.sln /p:Configuration=%configuration% /p:Platform="Win64" /nologo /m /verbosity:minimal
+
 - OpenCppCoverage --export_type cobertura:coverage.xml --modules "*.exe" --cover_children -- ctest -C %configuration% --output-on-failure
 
 - codecov -f coverage.xml --root %APPVEYOR_BUILD_FOLDER%
 
 test_script:
-- cmd: ctest -C Debug
+- '%APPVEYOR_BUILD_FOLDER%\build\RawBufferTests\RawBufferTests.exe'
