@@ -15,11 +15,6 @@ jobs:
         - BADGE=Ubuntu_18.04
         - GCC_VER="10"
         - MATRIX_EVAL="CC=gcc-${GCC_VER} && CXX=g++-${GCC_VER}"
-      global:
-        - secure: "XWfvoPFgXrzsTR+fzl1x6w3PECxEM6q3luJmqJWsxa5WK8Kuq1evZh+qM43o1tqeuUxwa4PL/NPRLVF8OGoXjQ07z3hJsYA8HUZDDyv2rhMASJjSGsVndqTFg6E1UfhkOCAI+QFuvy2xYIXh5/myJ1rgFYfC/DFr9ZhwxexA+bevSL+SNk0T99X9cc+s3a/yFBdJnCs/p+UXA4X5W4gc6nJSoJSvbBxyzzNLnmoQv1OH//sJag7xIN1A2WHZ75Bs9fwVotl9PkrmRbV4I5DCibmB3xdWV1rkbKSfhsCxn8U0AoQ5u8p8uRHL6tqQk7B+vphuJBQGJoaNNV64Fo5n1LR+y78FvaFmEWsb3ImyW/SM/Mcwjf7Nlc2buoe4IKxSCqKe3YQDtVq3IE2gtZuKwL6wycLokdWOUr4LZGKGv8w1Iv4OwNH0UwoezEjscGsuXxukX4mQsVR42nXEA4idosxZA2pUjl7/pivE/baV0Ryj7Sb4cJP/is4t2+kfO/HBbLrUbh3877bwPT3eEvcBbrJ4nMFE324zV5L6NS9CyFRYIQE8/YLz39Jbw+LsL+tyg+xwLeV5la6E+MJga12ecLZMQpKebBx1r7UmNVwnTthatGeNmLnWQVjOoIyVWABPxzoJgxKR0RizB3dv7FCXd8EuOAh1/SWyqiNaaldKvWE="
-      before_install:
-        - echo -n | openssl s_client -connect https://scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
-
       addons:
         apt:
           sources:
@@ -28,15 +23,6 @@ jobs:
             - gcc-10
             - g++-10
             - python3-pip
-        coverity_scan:
-          project:
-            name: "sakcakoca/RawBufferProject"
-            description: "Raw buffer project"
-          notification_email: salim.akcakoca@msn.com
-          build_command_prepend: "mkdir build && cd build"
-          build_command: "cmake --build . -- -j2"
-          branch_pattern: coverity_scan
-
       after_script:
         - bash <(curl -s https://codecov.io/bash) -x /usr/bin/gcov-${GCC_VER}
 #    - os: linux
@@ -61,11 +47,11 @@ jobs:
         - BADGE=OSX
         - GCC_VER="10"
         - MATRIX_EVAL="CC=gcc-${GCC_VER} && CXX=g++-${GCC_VER}"
-    - os: osx
-      compiler: clang
-      osx_image: xcode12.4
-      env:
-        - MATRIX_EVAL="CXX=clang++12 && CXXSTD=-std=c++20"
+#    - os: osx
+#      compiler: clang
+#      osx_image: xcode12.4
+#      env:
+#        - MATRIX_EVAL="CXX=clang++ && CXXSTD=-std=c++20"
 
 before_script:
   - eval "${MATRIX_EVAL}"
