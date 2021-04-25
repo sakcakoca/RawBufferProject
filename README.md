@@ -9,6 +9,7 @@ Windows  | [![Windows Build status](https://ci.appveyor.com/api/projects/status/
   <img alt="Coverity Scan Build Status"
        src="https://scan.coverity.com/projects/23025/badge.svg"/>
 </a>
+
 [![codecov](https://codecov.io/gh/sakcakoca/RawBufferProject/branch/master/graph/badge.svg?token=X4W14HNP37)](https://codecov.io/gh/sakcakoca/RawBufferProject)
 
 # RawBufferProject
