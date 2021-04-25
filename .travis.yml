@@ -5,7 +5,7 @@ install:
 
   # Fail if we can't run cmake
   - cmake --version
-  - sudo apt-get upgrade
+  - sudo upgrade cmake
 
 jobs:
   include:
