@@ -12,9 +12,7 @@ build_script:
 
     cmake --build . --config "Debug"
 
-    cd bin
-
     dir
 
 test_script:
-- cmd: ctest -C Debug
+- cmd: '%APPVEYOR_BUILD_FOLDER%\%CONFIGURATION%\RawBufferTests.exe'
