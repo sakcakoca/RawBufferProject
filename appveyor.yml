@@ -12,5 +12,7 @@ build_script:
 
     cmake --build . --config "Debug"
 
+    dir
+
 test_script:
 - cmd: ctest -C Debug
