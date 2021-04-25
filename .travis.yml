@@ -1,11 +1,14 @@
 language: cpp
 
+before_install:
+  sudo apt-add-repository 'deb https://apt.kitware.com/ubuntu/ bionic main'
+
 install:
   - cmake
 
   # Fail if we can't run cmake
   - cmake --version
-  - sudo upgrade cmake
+  - sudo apt upgrade cmake
 
 jobs:
   include:
