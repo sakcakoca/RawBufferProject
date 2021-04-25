@@ -8,7 +8,7 @@ build_script:
 
     cd build
 
-    cmake c:\project\source -G "Ninja" -DCMAKE_BUILD_TYPE:STRING="Debug" -DCMAKE_BINARY_DIR:PATH="c:\project\source\out"
+    cmake c:\project\source -G "Ninja" -DCMAKE_BUILD_TYPE:STRING="Debug"
 
     cmake --build . --config "Debug"
 
