@@ -3,7 +3,6 @@ language: cpp
 install:
   - python3 -m pip install --upgrade pip setuptools
   - pip install --upgrade cmake
-  - sudo apt-get install clang-12 lldb-12 lld-12
   - cmake --version
   - clang --version
 
@@ -30,7 +29,8 @@ jobs:
       dist: bionic
       compiler: clang
       env:
-        - MATRIX_EVAL="CC=clang-12 && CXX=clang++-12"
+        - CLANG_VER="12"
+        - MATRIX_EVAL="CC=clang-${CLANG_VER} && CXX=clang++-${CLANG_VER}"
       addons:
         apt:
           sources:
@@ -38,7 +38,7 @@ jobs:
             - llvm-toolchain-bionic-12
           packages: 
             - python3-pip
-            - clang
+            - clang-12
 
 
 before_script:
