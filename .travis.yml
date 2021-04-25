@@ -1,13 +1,19 @@
 dist: trusty
 language: cpp
 
-addons:
-  apt:
-    sources:
-        - ubuntu-toolchain-r-test
-    packages:
-        - gcc-10
-        - g++-10
+matrix:
+  include:
+  - os: linux
+    addons:
+      apt:
+        sources:
+            - ubuntu-toolchain-r-test
+        packages:
+            - gcc-10
+            - g++-10
+    env:
+        - CMAKE_VERSION="3.8"
+        - CMAKE_GENERATOR="Ninja"
 
 script:
   - CXX=/usr/bin/g++-10 CC=/usr/bin/gcc-10 cmake .
