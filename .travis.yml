@@ -1,7 +1,7 @@
 language: cpp
 
 install:
-  - python -m pip install --upgrade pip
+  - python3 -m pip install --upgrade pip setuptools
   - pip install --upgrade cmake
   - cmake --version
 
@@ -21,7 +21,7 @@ jobs:
           packages:
             - gcc-9
             - g++-9
-            - cmake
+            - python3-pip
       after_script:
         - bash <(curl -s https://codecov.io/bash) -x /usr/bin/gcov-${GCC_VER}
     - os: linux
@@ -32,7 +32,7 @@ jobs:
       addons:
         apt:
           packages: 
-            - cmake
+            - python3-pip
 
 
 before_script:

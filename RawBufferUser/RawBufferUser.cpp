@@ -11,7 +11,7 @@ void printCompilerInfo()
 		std::cout << "CPP Version: " << __cplusplus << std::endl;
 	#endif
 	#ifdef __GNUC_MINOR__ 
-		std::cout << "GCC Version: " << __GNUC__ << "." << __GNUC_MINOR__ << "." << __GNUC__PATCH_LEVEL__ << std::endl;
+		std::cout << "GCC Version: " << __GNUC__ << "." << __GNUC_MINOR__ << "." << __GNUC_PATCHLEVEL__ << std::endl;
 	#endif
 	#ifdef __clang__
 		std::cout << "Clang Version: " << __clang_major__ << "." << __clang_minor__ << "." << __clang_patchlevel__ << std::endl;
