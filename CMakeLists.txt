@@ -27,7 +27,7 @@ set_project_warnings(project_warnings)
 
 # Link this 'library' to set the c++ standard / compile-time options requested
 add_library(project_options INTERFACE)
-# sanitizer options if supported by compiler
+# sanitizer and code coverage options if supported by compiler
 include(cmake/Sanitizers.cmake)
 enable_sanitizers(project_options)
 

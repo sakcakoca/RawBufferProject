@@ -20,6 +20,7 @@ target_link_libraries(
   RawBufferTests
   gtest_main
   RawBufferHeaderOnly
+  project_options
 )
 
 include(GoogleTest)

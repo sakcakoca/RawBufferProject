@@ -3,7 +3,9 @@ language: cpp
 install:
   - python3 -m pip install --upgrade pip setuptools
   - pip install --upgrade cmake
+  - pip install clang
   - cmake --version
+  - clang --version
 
 jobs:
   include:
@@ -33,7 +35,7 @@ jobs:
         apt:
           packages: 
             - python3-pip
-            - clang-11
+            - clang
 
 
 before_script:
