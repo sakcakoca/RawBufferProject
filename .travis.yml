@@ -35,7 +35,8 @@ jobs:
         apt:
           sources:
             - ubuntu-toolchain-r-test
-            - llvm-toolchain-bionic-12
+            - sourceline: 'deb https://apt.llvm.org/bionic/ llvm-toolchain-bionic-12 main'
+              key_url: 'https://apt.llvm.org/llvm-snapshot.gpg.key'
           packages: 
             - python3-pip
             - clang-12
