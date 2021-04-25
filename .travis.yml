@@ -15,6 +15,10 @@ jobs:
         - BADGE=Ubuntu_18.04
         - GCC_VER="10"
         - MATRIX_EVAL="CC=gcc-${GCC_VER} && CXX=g++-${GCC_VER}"
+      global:
+        - secure: "dATzkTrmp1GTbsbLWlEdqq1Lt5jaRa+vj5SLBd0ItnKxxaOei2xnDmsICfPhKXslQ89efuNfl1BbaWs2sT24tKxMYKr3ZlVrF/E3dVu9+qXIuPh0juJJZrANSJcTS6zYAWGWGQ0AE3OffFpXEZYeehj3WFc5LeckemVf2VdwFQB1+uMQsH35WUzJVJd4L8eL8v3wFyMNmt3zlAuatGRa7oIcTPcg/wwEhu8mBNu3usUa9/soCAUNFKGaNklft6XQPe08vW9MlUfI/S8NGWnFEILdduKe9stxZ8xV8YTURJrd6JVB5hDYwg67kF/lB8V9xN9cwK2bDxBv0q5AAyRyS7++MlN/uQpQhdOkbKuNGkiGiHIn+r2e5TJE/N8HD8C/wwI+HRRmOaSkTGHC4RGY7ZGMyD7MbFbrbyDAsZGqGr9azEd/muHu6LKR09z8tHEJZvw3R7PvErBpHvR5rU8N04nrbUEr8B+XOFB+oF+SXXdpi00G5SqEnbQnVLU8yktluxlqcNQTCiXAXuBSITnyL6YIu9EXlokphabfOHbHcMTUjeUskoroIVnVrkZKlrP6H1guj9fjEEFKAEAAKDp/uIFNHmFWssMFAnUGqefUTkjpO3MgFGOnvh/wN4xPhKbitEz2uEtlpOdtrrJYidRL+w8OAI4NRP5w4hR6noM57vw="
+      before_install:
+        - echo -n | openssl s_client -connect https://scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
 
       addons:
         apt:
@@ -24,6 +28,15 @@ jobs:
             - gcc-10
             - g++-10
             - python3-pip
+        coverity_scan:
+          project:
+            name: "sakcakoca/RawBufferProject"
+            description: "Raw buffer project"
+          notification_email: salim.akcakoca@msn.com
+          build_command_prepend: "cmake -D ENABLE_COVERAGE:BOOL=TRUE ../"
+          build_command: "cmake --build . -- -j2"
+          branch_pattern: coverity_scan
+
       after_script:
         - bash <(curl -s https://codecov.io/bash) -x /usr/bin/gcov-${GCC_VER}
 #    - os: linux
@@ -52,9 +65,7 @@ jobs:
       compiler: clang
       osx_image: xcode12.4
       env:
-        - CXX=clang++
-        - CXXSTD=-std=c++20
-        - MATRIX_EVAL=""
+        - MATRIX_EVAL="CXX=clang++ && CXXSTD=-std=c++2a"
 
 before_script:
   - eval "${MATRIX_EVAL}"
