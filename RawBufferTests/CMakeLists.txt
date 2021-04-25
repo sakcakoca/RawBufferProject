@@ -24,3 +24,5 @@ target_link_libraries(
 
 include(GoogleTest)
 gtest_discover_tests(RawBufferTests)
+
+add_test(Tests RawBufferTests)
