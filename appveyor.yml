@@ -4,6 +4,6 @@ clone_folder: c:\project\source
 
 build_script:
 - cmd: >-
-    cmake c:\project\source -G "Ninja" -DCMAKE_BUILD_TYPE:STRING="Debug"
+    cmake c:\project\source -G "Ninja" -DCMAKE_BUILD_TYPE:STRING="Debug" -DCMAKE_BINARY_DIR:PATH="c:\project\source\out"
 
     cmake --build . --config "Debug"
