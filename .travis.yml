@@ -36,7 +36,7 @@ jobs:
 #        apt:
 #          sources:
 #            - ubuntu-toolchain-r-test
-#            - sourceline: 'deb https://apt.llvm.org/xenial/ llvm-toolchain-xenial-12 main'
+#            - sourceline: 'deb https://apt.llvm.org/bionic/ llvm-toolchain-bionic-12 main'
 #              key_url: 'https://apt.llvm.org/llvm-snapshot.gpg.key'
 #          packages: 
 #            - python3-pip
@@ -52,6 +52,8 @@ jobs:
       compiler: clang
       osx_image: xcode12.4
       env:
+        - CXX=clang++
+        - CXXSTD=-std=c++20
         - MATRIX_EVAL=""
 
 before_script:
