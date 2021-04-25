@@ -12,6 +12,8 @@ build_script:
 
     cmake --build . --config "Debug"
 
+    cd bin
+
     dir
 
 test_script:
