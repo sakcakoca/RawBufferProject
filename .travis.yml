@@ -4,13 +4,19 @@ language: cpp
 matrix:
   include:
   - os: linux
-   
+    addons:
+      apt:
+        sources:
+            - ubuntu-toolchain-r-test
+        packages:
+            - gcc-9
+            - g++-9
     env:
         - CMAKE_VERSION="3.8"
         - CMAKE_GENERATOR="Ninja"
 
 script:
-  - CXX=/usr/bin/g++-10 CC=/usr/bin/gcc-10 cmake .
+  - CXX=/usr/bin/g++-9 CC=/usr/bin/gcc-9 cmake .
   - cmake -D ENABLE_COVERAGE:BOOL=TRUE -D WARNINGS_AS_ERRORS:BOOL=FALSE ../
   - cmake --build . -- -j2
 
