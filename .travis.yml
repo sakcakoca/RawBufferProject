@@ -20,6 +20,7 @@ jobs:
         apt:
           sources:
             - ubuntu-toolchain-r-test
+            - llvm-toolchain-bionic-12
           packages:
             - gcc-10
             - g++-10
