@@ -26,7 +26,7 @@ jobs:
       after_script:
         - bash <(curl -s https://codecov.io/bash) -x /usr/bin/gcov-${GCC_VER}
     - os: linux
-      dist: bionic
+      dist: xenial
       compiler: clang
       env:
         - CLANG_VER="12"
@@ -35,7 +35,7 @@ jobs:
         apt:
           sources:
             - ubuntu-toolchain-r-test
-            - sourceline: 'deb https://apt.llvm.org/bionic/ llvm-toolchain-bionic-12 main'
+            - sourceline: 'deb https://apt.llvm.org/xenial/ llvm-toolchain-xenial-12 main'
               key_url: 'https://apt.llvm.org/llvm-snapshot.gpg.key'
           packages: 
             - python3-pip
