@@ -11,12 +11,14 @@ matrix:
         packages:
             - gcc-9
             - g++-9
+    compiler: gcc
     env:
         - CMAKE_VERSION="3.8"
         - CMAKE_GENERATOR="Ninja"
+        - GCC_VER="9"
+        - MATRIX_EVAL="CC=gcc-${GCC_VER} && CXX=g++-${GCC_VER}"
 
 script:
-  - CXX=/usr/bin/g++-9 CC=/usr/bin/gcc-9 cmake .
   - mkdir build
   - cd build
   - cmake -D ENABLE_COVERAGE:BOOL=TRUE -D WARNINGS_AS_ERRORS:BOOL=FALSE ../
