@@ -1,14 +1,10 @@
 language: cpp
 
-before_install:
-  - sudo apt-add-repository 'deb https://apt.kitware.com/ubuntu/ bionic main'
-
 install:
-  - cmake
-
+  - python3 -m pip install --upgrade pip setuptools
+  - pip install --upgrade cmake
   # Fail if we can't run cmake
   - cmake --version
-  - sudo apt upgrade cmake
 
 jobs:
   include:
