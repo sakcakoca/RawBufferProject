@@ -12,6 +12,7 @@ jobs:
       dist: bionic
       compiler: gcc
       env:
+        - BADGE=Ubuntu_18.04
         - GCC_VER="10"
         - MATRIX_EVAL="CC=gcc-${GCC_VER} && CXX=g++-${GCC_VER}"
 
@@ -44,9 +45,14 @@ jobs:
       compiler: gcc
       osx_image: xcode12.4
       env:
+        - BADGE=OSX
         - GCC_VER="10"
         - MATRIX_EVAL="CC=gcc-${GCC_VER} && CXX=g++-${GCC_VER}"
-
+    - os: osx
+      compiler: clang
+      osx_image: xcode12.4
+      env:
+        - MATRIX_EVAL=""
 
 before_script:
   - eval "${MATRIX_EVAL}"
