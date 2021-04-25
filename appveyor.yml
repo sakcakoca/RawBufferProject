@@ -14,5 +14,9 @@ build_script:
 
     dir
 
+    cd RawBufferTests
+
+    dir
+
 test_script:
-- cmd: '%APPVEYOR_BUILD_FOLDER%\%CONFIGURATION%\RawBufferTests.exe'
+- '%APPVEYOR_BUILD_FOLDER%\%CONFIGURATION%\RawBufferTests.exe'
