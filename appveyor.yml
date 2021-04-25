@@ -2,10 +2,6 @@ image:
   - Visual Studio 2019
 clone_folder: c:\project\source
 
-install:
-  - choco install opencppcoverage codecov
-  - set PATH=C:\Program Files\OpenCppCoverage;%PATH%
-
 build_script:
 - cmd: >-
     mkdir build
@@ -17,12 +13,6 @@ build_script:
     cmake --build . --config "Debug"
 
     dir
-
-- MSBuild RawBufferProject.sln /p:Configuration=%configuration% /p:Platform="Win64" /nologo /m /verbosity:minimal
-
-- OpenCppCoverage --export_type cobertura:coverage.xml --modules "*.exe" --cover_children -- ctest -C %configuration% --output-on-failure
-
-- codecov -f coverage.xml --root %APPVEYOR_BUILD_FOLDER%
 
 test_script:
 - '%APPVEYOR_BUILD_FOLDER%\build\RawBufferTests\RawBufferTests.exe'
