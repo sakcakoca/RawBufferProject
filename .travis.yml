@@ -11,7 +11,6 @@ matrix:
         packages:
             - gcc-9
             - g++-9
-    compiler: gcc
     env:
         - CMAKE_VERSION="3.8"
         - CMAKE_GENERATOR="Ninja"
