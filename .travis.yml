@@ -41,10 +41,11 @@ jobs:
 #            - python3-pip
 #            - clang-12
     - os: osx
-      compiler: clang
+      compiler: gcc
       osx_image: xcode12.4
       env:
-        - MATRIX_EVAL=""
+        - GCC_VER="10"
+        - MATRIX_EVAL="CC=gcc-${GCC_VER} && CXX=g++-${GCC_VER}"
 
 
 before_script:
