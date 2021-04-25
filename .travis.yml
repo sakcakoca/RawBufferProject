@@ -17,6 +17,8 @@ matrix:
 
 script:
   - CXX=/usr/bin/g++-9 CC=/usr/bin/gcc-9 cmake .
+  - mkdir build
+  - cd build
   - cmake -D ENABLE_COVERAGE:BOOL=TRUE -D WARNINGS_AS_ERRORS:BOOL=FALSE ../
   - cmake --build . -- -j2
 
