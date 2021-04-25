@@ -1,9 +1,8 @@
 language: cpp
 
 install:
-  - python3 -m pip install --upgrade pip setuptools
+  - python -m pip install --upgrade pip
   - pip install --upgrade cmake
-  # Fail if we can't run cmake
   - cmake --version
 
 jobs:
@@ -20,7 +19,6 @@ jobs:
           sources:
             - ubuntu-toolchain-r-test
           packages:
-            # I couldn't get ${GCC_VER} in here successfully
             - gcc-9
             - g++-9
             - cmake
