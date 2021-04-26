@@ -94,7 +94,7 @@ jobs:
       env:
         - MATRIX_EVAL="CC=clang && CXX=clang++ && CXXFLAGS=-stdlib=libc++"
       install:
-        - brew install --with-toolchain llvm
+        - brew install llvm
 
 before_script:
   - eval "${MATRIX_EVAL}"
