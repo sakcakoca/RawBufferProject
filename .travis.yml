@@ -62,7 +62,7 @@ jobs:
       compiler: clang
       env:
         - CLANG_VER="12"
-        - MATRIX_EVAL="CC=clang-${CLANG_VER} && CXX=clang++-${CLANG_VER}"
+        - MATRIX_EVAL="CC=clang-${CLANG_VER} && CXX=clang++-${CLANG_VER} && CXXFLAGS=-stdlib=libc++"
       install:
         - sudo rm -rf /usr/local/clang-7.0.0
         - sudo bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
@@ -74,9 +74,8 @@ jobs:
             - sourceline: 'ppa:ubuntu-toolchain-r/test'
             - sourceline: 'deb http://apt.llvm.org/focal/ llvm-toolchain-focal main'
               key_url: 'https://apt.llvm.org/llvm-snapshot.gpg.key'
-          #packages: 
-            #- clang-12
-            #- python3-pip
+          packages: 
+            - g++-10
             
 
      #Ubuntu Bionic with clang#
