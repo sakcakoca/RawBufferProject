@@ -8,6 +8,7 @@ install:
 
 jobs:
   include:
+    #Coverity Scan Config#
     - os: linux
       dist: bionic
       compiler: gcc
@@ -37,6 +38,7 @@ jobs:
             - g++-10
             - python3-pip
 
+    #Ubuntu Bionic with gcc10 - Labeled as Ubuntu_18.04#
     - os: linux
       dist: bionic
       compiler: gcc
@@ -54,6 +56,8 @@ jobs:
             - python3-pip
       after_script:
         - bash <(curl -s https://codecov.io/bash) -x /usr/bin/gcov-${GCC_VER}
+
+     #Ubuntu Bionic with clang#
 #    - os: linux
 #      dist: bionic
 #      compiler: clang
@@ -69,6 +73,8 @@ jobs:
 #          packages: 
 #            - python3-pip
 #            - clang-12
+
+    #OsX with gcc and xcode12.4 - Labeled as OSX#
     - os: osx
       compiler: gcc
       osx_image: xcode12.4
@@ -76,6 +82,8 @@ jobs:
         - BADGE=OSX
         - GCC_VER="10"
         - MATRIX_EVAL="CC=gcc-${GCC_VER} && CXX=g++-${GCC_VER}"
+
+     #OsX with clang#
 #    - os: osx
 #      compiler: clang
 #      osx_image: xcode12.4
@@ -90,6 +98,6 @@ script:
   - cd build
   - cmake -D ENABLE_COVERAGE:BOOL=TRUE ../
   - cmake --build . -- -j2
-
+  - ctest -j2
 
 

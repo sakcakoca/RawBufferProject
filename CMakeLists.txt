@@ -39,5 +39,6 @@ target_include_directories(RawBufferHeaderOnly INTERFACE .)
 # Include sub-projects.
 add_subdirectory("RawBufferHeaderOnly")
 add_subdirectory("RawBufferStaticLibrary")
+enable_testing()
 add_subdirectory("RawBufferTests")
 add_subdirectory ("RawBufferUser")
