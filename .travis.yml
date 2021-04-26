@@ -87,14 +87,14 @@ jobs:
         - GCC_VER="10"
         - MATRIX_EVAL="CC=gcc-${GCC_VER} && CXX=g++-${GCC_VER}"
 
+
      #OsX with clang#
-    - os: osx
-      compiler: clang
-      osx_image: xcode12.4
-      env:
-        - MATRIX_EVAL="CC=clang && CXX=clang++ && CXXFLAGS=-stdlib=libc++"
-      install:
-        - brew install llvm
+     #Currently AppleClang compiler doesn't support c++ 20 features compeletely
+#    - os: osx
+#      compiler: clang
+#      osx_image: xcode12.4
+#      env:
+#        - MATRIX_EVAL="CC=clang && CXX=clang++ && CXXFLAGS=-stdlib=libc++"
 
 before_script:
   - eval "${MATRIX_EVAL}"
