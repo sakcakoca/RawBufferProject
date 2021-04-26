@@ -64,7 +64,7 @@ jobs:
         - CLANG_VER="12"
         - MATRIX_EVAL="CC=clang-${CLANG_VER} && CXX=clang++-${CLANG_VER}"
       install:
-        - sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-12 10 --slave /usr/bin/clang++ clang++ /usr/bin/clang++-12
+        - bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
         - sudo rm -rf /usr/local/clang-7.0.0
         - clang++ --version
         - curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
