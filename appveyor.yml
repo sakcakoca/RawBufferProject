@@ -15,4 +15,4 @@ build_script:
     dir
 
 test_script:
-- '%APPVEYOR_BUILD_FOLDER%\build\RawBufferTests\RawBufferTests.exe'
+- cmd: ctest -C Debug
