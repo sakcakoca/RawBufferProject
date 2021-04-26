@@ -75,8 +75,8 @@ jobs:
             - sourceline: 'ppa:ubuntu-toolchain-r/test'
             - sourceline: 'deb http://apt.llvm.org/focal/ llvm-toolchain-focal main'
               key_url: 'https://apt.llvm.org/llvm-snapshot.gpg.key'
-          packages: 
-            - clang-12
+          #packages: 
+            #- clang-12
             #- python3-pip
             
 
