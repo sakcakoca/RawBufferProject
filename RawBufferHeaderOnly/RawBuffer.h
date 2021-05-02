@@ -18,7 +18,7 @@ public:
 	RawBuffer& operator+=(OneByteData auto data);
 	
 	template <typename T>
-	RawBuffer& operator+=(T container) requires OneByteData<typename decltype(std::span{ container })::element_type>;
+	RawBuffer& operator+=(T container) requires OneByteData<typename decltype(std::span{ container })::value_type>;
 
 	template <typename T, std::size_t N>
 	RawBuffer& operator+=(T(&rawArray)[N]);
@@ -67,7 +67,7 @@ inline size_t RawBuffer::getSize() const
 }
 
 template <typename T>
-RawBuffer& RawBuffer::operator+=(T container) requires OneByteData<typename decltype(std::span{ container })::element_type >
+RawBuffer& RawBuffer::operator+=(T container) requires OneByteData<typename decltype(std::span{ container })::value_type >
 {
 	for (auto data : std::span{container})
 	{
