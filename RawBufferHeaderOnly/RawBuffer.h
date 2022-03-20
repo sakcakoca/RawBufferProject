@@ -69,7 +69,7 @@ inline size_t RawBuffer::getSize() const
 template <typename T>
 RawBuffer& RawBuffer::operator+=(T container) requires OneByteData<typename decltype(std::span{ container })::value_type >
 {
-	for (auto data : std::span{container})
+	for (auto s = std::span{ container }; auto data : s)
 	{
 		add(data);
 	}
