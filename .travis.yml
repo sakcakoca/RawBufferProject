@@ -9,34 +9,33 @@ install:
 jobs:
   include:
     #Coverity Scan Config#
-    #- os: linux
-    #  dist: bionic
-    #  compiler: gcc
-    #  before_install:
-    #    - echo -n | openssl s_client -connect https://scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
-    #  env:
-    #    - SPECIAL=coverity
-    #    # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
-    #    #   via the "travis encrypt" command using the project repo's public key
-    #    - secure: "GYSqgp+Fx/8ZAJQm/aSkv+vnYA4iB5eE0kN54djZaAyhLsx7zacfLrP8nK9sLVMr7fjJrXDo0lxqrGipiWWnT1dI7FdjtTOohK/WZpNBooh4K4+KALd1A1CCnHk5o6F9RHlH7JgIaQLpcNMH0YT5KGaat6gUw7mUtB/MVL+BPwfldsBBU6G4v7N/JeLoiavkT3m3wqakzIX0HxxjHnDpfP5Z+/PuSN+TXhMridh2th7KxjKf0fQ7n54AXDnskXmeX2Rzt6ryJ0lX+lbdV1A3qvC+8DWloFfqTiLwx6CMXOiGfCKp41kz/QkhJ1rcf0L/PZlwPZwVmeloEQNDvG+eZJa4u4suQ2fjRsHmjblgcZsSr17HCgz8KTkT2NeEt6T77vA1oJiBBOe4Klx1cO6rSMAROxR/cWuZXj483umKLt/Y8isSJk+5iEaBlgPDTCal/1hzlIS2+AMRaRUEFsQsp2LeiXqAOiUnKPCCFCulzfrVkGIlLDSxdGzAUaZLeJt8fDKoyzyarOSWHiMAk20A4KUJ2SufgFr/oPtJzhSw1n6kanbhiKsc6YSAjelipPbpcHzf1WTTUvMfG/vbYEQLd6rDqDTyQcdqy4zXeqbhjrnPvHpCp8T4Fcfjpt6MlMEy4KDVzmJrKimvL/lyoWwfUgw1R3K7dqiUiJCmpayGuuU="
-    #    - GCC_VER="10"
-    #    - MATRIX_EVAL="CC=gcc-${GCC_VER} && CXX=g++-${GCC_VER}"
-    #  addons:
-    #    coverity_scan:
-    #      project:
-    #        name: "sakcakoca/RawBufferProject"
-    #        description: "Raw Buffer Project"
-    #      notification_email: salim.akcakoca@msn.com
-    #      build_command_prepend: "mkdir build ; cd build"
-    #      build_command: "cmake --build . -- -j2"
-    #      branch_pattern: coverity_scan
-    #    apt:
-    #      sources:
-    #        - ubuntu-toolchain-r-test
-    #      packages:
-    #        - gcc-10
-    #        - g++-10
-    #        - python3-pip
+    - os: linux
+      dist: bionic
+      compiler: gcc
+      before_install:
+        - echo -n | openssl s_client -connect https://scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
+      env:
+        - GCC_VER="10"
+        - MATRIX_EVAL="CC=gcc-${GCC_VER} && CXX=g++-${GCC_VER}"
+        global:
+          - secure: "oaLj5mf2/AW3e7810dhwS7PwdFfAyVxqaEyOLObjyqrbItDMNct0tmul08wchQ94d0q6k4/JZu1iXb6WuedO2eY1CcN5K5dU5tV3+aKmLWVwIfr7ildPsvcPlsjeF4P7bl/ppSogKcEYh+JsOWggxafZroEg3naKEakQ/zCFpZ5Uk6FQod/OILTL93UdCR7aiO8WRdhzOJczuRfE1yMwmYV0SHJVpGu7okFjk0pQ3Ewdraq2VR/Iht8meZyB9wZcJY9XA5hF5ztI4z8P5nnFsOoOVlvfXxZGpTMS99lOcvG6jL3JxnBnMLzIXW3spelZ0q3Y2cX6CLIoZjEYhevHcZGOl7oK4G1+JMIfJ9GME19MKmgssIYilL0IZZ8TszbJeUwHGE2NZRfcopzqH0w8hdiivtIZmvtaPPkSucCznBZiQe9aPNZA59G715NZ9WMCbvLCYAjf+WSO1/jHz19fXEcNZur55i//F0//wcFZJ0CLa4mNHwG4xr1ZYfMHlOSuPt71X0uHwTHacc+A6i+MbtccOcPHusRIGx6E5WjP6+UKLho87HgCALfWOKxBOqKjZmwmXr9I7Q0Edkl5rRtCnlEcPYfPzsr1yxvmZoT7ddPdmUnUfQc4lWCAaTr/W1BVGs35v/aA55qM4iydSFVDHthn/2xT+Icjr1doMhQ65TA="
+        
+      addons:
+        coverity_scan:
+          project:
+            name: "sakcakoca/RawBufferProject"
+            description: "Raw Buffer Project"
+          notification_email: salim.akcakoca@msn.com
+          build_command_prepend: "mkdir build ; cd build"
+          build_command: "cmake --build . -- -j2"
+          branch_pattern: master
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - gcc-10
+            - g++-10
+            - python3-pip
 
     #Ubuntu Bionic (18.04) with gcc10 - Labeled as Ubuntu_18.04#
     - os: linux
