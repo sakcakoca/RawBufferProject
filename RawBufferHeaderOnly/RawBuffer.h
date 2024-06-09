@@ -39,96 +39,10 @@ public:
     /**
      * @brief Adds a single byte of data to the buffer.
      * @param data The data to be added.
-     * @return Reference to the current RawBuffer object.
-     */
-    RawBuffer& operator+=(OneByteData auto data)
-    {
-        add(data);
-        return *this;
-    }
-
-    /**
-     * @brief Adds a single byte of data to the buffer.
-     * @param data The data to be added.
      */
     void push_back(OneByteData auto data)
     {
-        add(data);
-    }
-
-    /**
-     * @brief Adds a container of one-byte data to the buffer.
-     * @tparam T The type of the container.
-     * @param container The container with data to be added.
-     * @return Reference to the current RawBuffer object.
-     */
-    template <typename T>
-    RawBuffer& operator+=(T container) requires OneByteData<typename decltype(std::span{ container })::value_type>
-    {
-        for (auto s = std::span{ container }; auto data : s)
-        {
-            add(data);
-        }
-        return *this;
-    }
-
-    /**
-     * @brief Adds a C-style array of one-byte data to the buffer.
-     * @tparam T The type of the array elements.
-     * @tparam N The size of the array.
-     * @param rawArray The array with data to be added.
-     * @return Reference to the current RawBuffer object.
-     */
-    template <typename T, std::size_t N>
-    RawBuffer& operator+=(T(& rawArray)[N]) requires OneByteData<T>
-    {
-        *this += std::span{ rawArray };
-        return *this;
-    }
-
-    /**
-     * @brief Adds the contents of another RawBuffer to this buffer.
-     * @param otherBuffer Another RawBuffer object.
-     * @return Reference to the current RawBuffer object.
-     */
-    RawBuffer& operator+=(const RawBuffer& otherBuffer)
-    {
-        *this += otherBuffer.getInternalBuffer();
-        return *this;
-    }
-
-    /**
-     * @brief Spaceship operator for comparing RawBuffer objects.
-     * @param other The RawBuffer object to compare with.
-     * @return A comparison result.
-     */
-    auto operator<=>(const RawBuffer&) const = default;
-
-    /**
-     * @brief Gets the internal buffer.
-     * @return A constant reference to the internal buffer.
-     */
-    [[nodiscard]] const InternalBufferType& getInternalBuffer() const
-    {
-        return buffer;
-    }
-
-    /**
-     * @brief Gets the capacity of the buffer.
-     * @return The capacity of the buffer.
-     */
-    [[nodiscard]] size_t getBufferCapacity() const
-    {
-        return buffer.capacity();
-    }
-
-    /**
-     * @brief Gets the current size of the buffer.
-     * @return The size of the buffer.
-     */
-    [[nodiscard]] size_t size() const
-    {
-        return buffer.size();
+        buffer.push_back(static_cast<std::byte>(data));
     }
 
     /**
@@ -137,6 +51,33 @@ public:
     void clear()
     {
         buffer.clear();
+    }
+
+    /**
+    * @brief Gets the current size of the buffer.
+    * @return The size of the buffer.
+    */
+    [[nodiscard]] size_t size() const
+    {
+        return buffer.size();
+    }
+
+    /**
+     * @brief Gets the capacity of the buffer.
+     * @return The capacity of the buffer.
+     */
+    [[nodiscard]] size_t capacity() const
+    {
+        return buffer.capacity();
+    }
+
+    /**
+     * @brief Gets the internal buffer.
+     * @return A constant reference to the internal buffer.
+     */
+    [[nodiscard]] const InternalBufferType& getInternalBuffer() const
+    {
+        return buffer;
     }
 
     /**
@@ -159,7 +100,7 @@ public:
      * @brief Returns a constant iterator to the beginning of the buffer.
      * @return A constant iterator to the beginning of the buffer.
      */
-    const_iterator begin() const {
+    [[nodiscard]] const_iterator begin() const {
         return buffer.begin();
     }
 
@@ -167,23 +108,20 @@ public:
      * @brief Returns a constant iterator to the end of the buffer.
      * @return A constant iterator to the end of the buffer.
      */
-    const_iterator end() const {
+    [[nodiscard]] const_iterator end() const {
         return buffer.end();
     }
 
+    /**
+     * @brief Spaceship operator for comparing RawBuffer objects.
+     * @param other The RawBuffer object to compare with.
+     * @return A comparison result.
+     */
+    auto operator<=>(const RawBuffer& other) const = default;
+
 private:
     static constexpr size_t INITIAL_SIZE_OF_BUFFER = 128; ///< Initial size of the buffer.
-
     InternalBufferType buffer; ///< Vector to store the raw byte data.
-
-    /**
-     * @brief Adds a single byte of data to the buffer.
-     * @param data The data to be added.
-     */
-    void add(OneByteData auto data)
-    {
-        buffer.push_back(static_cast<std::byte>(data));
-    }
 };
 
 
@@ -217,3 +155,73 @@ public:
         }
     }
 };
+
+/**
+ * @brief Adds a single byte of data to the buffer.
+ * @param lhs The left-hand side RawBuffer.
+ * @param data The data to be added.
+ * @return Reference to the modified RawBuffer object.
+ */
+RawBuffer& operator+=(RawBuffer& lhs, OneByteData auto data)
+{
+    lhs.push_back(data);
+    return lhs;
+}
+
+/**
+ * @brief Adds a container of one-byte data to the buffer.
+ * @param lhs The left-hand side RawBuffer.
+ * @tparam T The type of the container.
+ * @param container The container with data to be added.
+ * @return Reference to the modified RawBuffer object.
+ */
+template <typename T>
+RawBuffer& operator+=(RawBuffer& lhs, T container) requires OneByteData<typename decltype(std::span{ container })::value_type>
+{
+    for (auto s = std::span{ container }; auto data : s)
+    {
+        lhs.push_back(data);
+    }
+    return lhs;
+}
+
+/**
+ * @brief Adds a C-style array of one-byte data to the buffer.
+ * @param lhs The left-hand side RawBuffer.
+ * @tparam T The type of the array elements.
+ * @tparam N The size of the array.
+ * @param rawArray The array with data to be added.
+ * @return Reference to the modified RawBuffer object.
+ */
+template <typename T, std::size_t N>
+RawBuffer& operator+=(RawBuffer& lhs, T(& rawArray)[N]) requires OneByteData<T>
+{
+    lhs += std::span{ rawArray };
+    return lhs;
+}
+
+/**
+ * @brief Adds the contents of another RawBuffer to this buffer.
+ * @param lhs The left-hand side RawBuffer.
+ * @param rhs The right-hand side RawBuffer.
+ * @return Reference to the modified left-hand side RawBuffer object.
+ */
+RawBuffer& operator+=(RawBuffer& lhs, const RawBuffer& rhs)
+{
+    lhs += rhs.getInternalBuffer();
+    return lhs;
+}
+
+/**
+ * @brief Concatenates two RawBuffer objects.
+ * @param lhs The left-hand side RawBuffer.
+ * @param rhs The right-hand side RawBuffer.
+ * @return A new RawBuffer containing the concatenated data.
+ */
+RawBuffer operator+(const RawBuffer& lhs, const RawBuffer& rhs)
+{
+    RawBuffer result;
+    result += lhs.getInternalBuffer();
+    result += rhs.getInternalBuffer();
+    return result;
+}

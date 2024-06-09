@@ -28,7 +28,7 @@ public:
 	
 	[[nodiscard]] inline const auto& getInternalBuffer() const;
 	
-	[[nodiscard]] inline size_t getBufferCapacity() const;
+	[[nodiscard]] inline size_t capacity() const;
 	
 	[[nodiscard]] inline size_t size() const;
 

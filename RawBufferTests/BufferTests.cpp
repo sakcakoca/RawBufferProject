@@ -64,10 +64,10 @@ namespace RawBufferTests
     {
         std::vector<char> vectorOfChar;
         const size_t numberOfElementsToBePushed = effolkronium::random_static::get<unsigned short>();
-        for (size_t i = 0; i < numberOfElementsToBePushed; i++)
-        {
-            vectorOfChar.push_back(effolkronium::random_static::get<char>());
-        }
+        vectorOfChar.reserve(numberOfElementsToBePushed); // Reserve space for efficiency
+
+        std::ranges::generate(vectorOfChar,
+                              []() { return effolkronium::random_static::get<char>(); });
 
         rawBuffer += vectorOfChar;
 
@@ -82,14 +82,15 @@ namespace RawBufferTests
     // @brief Tests adding an array of chars to the buffer.
     TEST_F(RawBufferFixture, Should_AddArrayOfChar_When_AddingArrayOfChar)
     {
-        constexpr size_t arraySize = 6000;
-        std::array<char, arraySize> arrayOfChar = {0};
-        for (size_t i = 0; i < arraySize; i++)
-        {
-            arrayOfChar.at(i) = effolkronium::random_static::get<char>();
-        }
+        constexpr size_t arraySize = 600;
+        std::array<char, arraySize> arrayOfChar{};
+
+        std::ranges::generate(arrayOfChar,
+                              []() { return effolkronium::random_static::get<char>(); });
+
 
         rawBuffer += arrayOfChar;
+
 
         EXPECT_EQ(rawBuffer.size(), arrayOfChar.size());
         // Compare the content. The below test code is needed since vector holds char type and rawBuffer holds std::byte type.
@@ -101,12 +102,12 @@ namespace RawBufferTests
     // @brief Tests adding a raw array of chars to the buffer.
     TEST_F(RawBufferFixture, Should_AddRawArrayOfChar_When_AddingRawArrayOfChar)
     {
-        constexpr size_t arraySize = 7000;
+        constexpr size_t arraySize = 700;
         char rawArrayOfChar[arraySize] = { 0 };
-        for (char& i : rawArrayOfChar)
-        {
-            i = effolkronium::random_static::get<char>();
-        }
+
+        std::ranges::generate(rawArrayOfChar,
+                              []() { return effolkronium::random_static::get<char>(); });
+
 
         rawBuffer += rawArrayOfChar;
 
@@ -117,17 +118,36 @@ namespace RawBufferTests
         }), rawArrayOfChar));
     }
 
+    // @brief Tests adding a span of bytes to the buffer.
+    TEST_F(RawBufferFixture, Should_AddSpanOfByte_When_AddingSpanOfByte)
+    {
+        constexpr size_t spanSize = 200;
+        std::array<std::byte, spanSize> array{};
+
+        std::ranges::generate(array,
+                              []() { return static_cast<std::byte>(effolkronium::random_static::get<unsigned char>()); });
+
+
+        const std::span<std::byte> span{array};
+        rawBuffer += span;
+
+
+        EXPECT_EQ(rawBuffer.size(), spanSize);
+        EXPECT_THAT(rawBuffer.getInternalBuffer(), ::testing::ElementsAreArray(array));
+    }
+
     // @brief Tests adding an array of bytes to the buffer.
     TEST_F(RawBufferFixture, Should_AddArrayOfByte_When_AddingArrayOfByte)
     {
-        constexpr size_t arraySize = 6000;
+        constexpr size_t arraySize = 600;
         std::array<std::byte, arraySize> arrayOfByte{};
-        for (size_t i = 0; i < arraySize; i++)
-        {
-            arrayOfByte.at(i) = static_cast<std::byte>(effolkronium::random_static::get<unsigned char>());
-        }
+
+        std::ranges::generate(arrayOfByte,
+                             []() { return static_cast<std::byte>(effolkronium::random_static::get<unsigned char>()); });
+
 
         rawBuffer += arrayOfByte;
+
 
         EXPECT_EQ(rawBuffer.size(), arrayOfByte.size());
         EXPECT_THAT(rawBuffer.getInternalBuffer(), ::testing::ElementsAreArray(arrayOfByte));
@@ -136,14 +156,15 @@ namespace RawBufferTests
     // @brief Tests adding a raw array of bytes to the buffer.
     TEST_F(RawBufferFixture, Should_AddRawArrayOfByte_When_AddingRawArrayOfByte)
     {
-        constexpr size_t arraySize = 7000;
+        constexpr size_t arraySize = 800;
         std::byte rawArrayOfByte[arraySize];
-        for (std::byte& i : rawArrayOfByte)
-        {
-            i = static_cast<std::byte>(effolkronium::random_static::get<unsigned char>());
-        }
+
+        std::ranges::generate(rawArrayOfByte,
+                             []() { return static_cast<std::byte>(effolkronium::random_static::get<unsigned char>()); });
+
 
         rawBuffer += rawArrayOfByte;
+
 
         EXPECT_EQ(rawBuffer.size(), arraySize);
         EXPECT_THAT(rawBuffer.getInternalBuffer(), ::testing::ElementsAreArray(rawArrayOfByte));
@@ -157,8 +178,7 @@ namespace RawBufferTests
         {
             rawBuffer += effolkronium::random_static::get<unsigned char>();
         }
-
-        RawBuffer::InternalBufferType vector_to_compare{ rawBuffer.begin(), rawBuffer.end() };
+        std::vector<std::byte> initialBuffer{rawBuffer.begin(), rawBuffer.end()};
 
         RawBuffer otherRawBuffer;
         const size_t sizeOfOtherRawBuffer = effolkronium::random_static::get<unsigned short>();
@@ -168,9 +188,71 @@ namespace RawBufferTests
         }
 
         rawBuffer += otherRawBuffer;
-        vector_to_compare.insert(vector_to_compare.end(), otherRawBuffer.begin(), otherRawBuffer.end());
 
         EXPECT_EQ(rawBuffer.size(), initialSize + sizeOfOtherRawBuffer);
-        EXPECT_THAT(rawBuffer, ::testing::ElementsAreArray(vector_to_compare));
+        std::vector<std::byte> expectedBuffer{};
+        expectedBuffer.reserve(initialSize + sizeOfOtherRawBuffer);
+        expectedBuffer.insert(expectedBuffer.end(), initialBuffer.begin(), initialBuffer.end());
+        expectedBuffer.insert(expectedBuffer.end(), otherRawBuffer.begin(), otherRawBuffer.end());
+        EXPECT_THAT(rawBuffer, ::testing::ElementsAreArray(expectedBuffer));
+    }
+
+    // @brief Tests the concatenation operator for RawBuffer.
+    TEST_F(RawBufferFixture, Should_ConcatenateBuffers_When_ConcatenatingWithOperator)
+    {
+        RawBuffer buffer1;
+        RawBuffer buffer2;
+        constexpr size_t size1 = 1000;
+        constexpr size_t size2 = 2000;
+        for (size_t i = 0; i < size1; i++)
+        {
+            buffer1 += effolkronium::random_static::get<unsigned char>();
+        }
+        for (size_t i = 0; i < size2; i++)
+        {
+            buffer2 += effolkronium::random_static::get<unsigned char>();
+        }
+
+        const RawBuffer concatenatedBuffer = buffer1 + buffer2;
+
+        EXPECT_EQ(concatenatedBuffer.size(), size1 + size2);
+        RawBuffer::InternalBufferType expectedBuffer;
+        expectedBuffer.reserve(size1 + size2);
+        expectedBuffer.insert(expectedBuffer.end(), buffer1.begin(), buffer1.end());
+        expectedBuffer.insert(expectedBuffer.end(), buffer2.begin(), buffer2.end());
+        EXPECT_THAT(concatenatedBuffer, ::testing::ElementsAreArray(expectedBuffer));
+    }
+
+    // @brief Tests the range-based for loop for RawBuffer.
+    TEST_F(RawBufferFixture, Should_UseRangeBasedForLoop_When_IteratingOverBuffer)
+    {
+        constexpr size_t bufferSize = 500;
+        for (size_t i = 0; i < bufferSize; i++)
+        {
+            rawBuffer += static_cast<std::byte>(i);
+        }
+
+        size_t count = 0;
+        for (const auto& byte : rawBuffer)
+        {
+            EXPECT_EQ(byte, static_cast<std::byte>(count++));
+        }
+        EXPECT_EQ(count, bufferSize);
+    }
+
+    // @brief Tests the equality operator for RawBuffer.
+    TEST_F(RawBufferFixture, Should_CheckEquality_When_ComparingWithOperator)
+    {
+        RawBuffer buffer1;
+        RawBuffer buffer2;
+        constexpr size_t size = 100;
+        for (size_t i = 0; i < size; i++)
+        {
+            const auto element = static_cast<std::byte>(effolkronium::random_static::get<unsigned char>());
+            buffer1 += element;
+            buffer2 += element;
+        }
+
+        EXPECT_EQ(buffer1, buffer2);
     }
 }

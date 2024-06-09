@@ -12,7 +12,7 @@ const auto& RawBuffer::getInternalBuffer() const
 	return buffer;
 }
 
-size_t RawBuffer::getBufferCapacity() const
+size_t RawBuffer::capacity() const
 {
 	return buffer.capacity();
 }
