@@ -29,11 +29,6 @@ public:
     using const_iterator = InternalBufferType::const_iterator; ///< Iterator type for constant access.
 
     /**
-     * @brief A nested class providing helper functions for RawBuffer.
-     */
-    class Helper;
-
-    /**
      * @brief Default constructor for RawBuffer.
      * Initializes the buffer with a reserved size.
      */
