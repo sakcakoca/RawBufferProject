@@ -17,7 +17,7 @@ size_t RawBuffer::getBufferCapacity() const
 	return buffer.capacity();
 }
 
-size_t RawBuffer::getSize() const
+size_t RawBuffer::size() const
 {
 	return buffer.size();
 }

@@ -30,7 +30,7 @@ public:
 	
 	[[nodiscard]] inline size_t getBufferCapacity() const;
 	
-	[[nodiscard]] inline size_t getSize() const;
+	[[nodiscard]] inline size_t size() const;
 
 private:
 	static constexpr size_t  INITIAL_SIZE_OF_BUFFER = 128;
