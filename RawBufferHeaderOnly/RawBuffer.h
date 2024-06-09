@@ -4,12 +4,18 @@
 #include <span>
 #include <vector>
 #include <iterator>
+#include <format>
 
 /**
  * @brief Concept to ensure that the type T is one byte in size.
  */
 template <typename T>
 concept OneByteData = sizeof(T) == 1;
+
+template <typename T>
+concept SpanConstructible = requires(T container) {
+    std::span{container};
+};
 
 /**
  * @brief A class representing a buffer for raw byte data.
@@ -34,6 +40,34 @@ public:
     RawBuffer()
     {
         buffer.reserve(INITIAL_SIZE_OF_BUFFER);
+    }
+
+    /**
+     * @brief Constructor for initializing with a single byte of data.
+     * @param data The single byte of data to initialize the buffer with.
+     */
+    explicit RawBuffer(OneByteData auto data) {
+        buffer.reserve(INITIAL_SIZE_OF_BUFFER);
+        *this += data;
+    }
+
+    /**
+     * @brief Constructor for initializing with data from a container.
+     * @tparam T The type of the container.
+     * @param container The container with data to initialize the buffer with.
+     */
+    template <typename T>
+    explicit RawBuffer(const T& container) requires OneByteData<typename decltype(std::span{ container })::value_type>
+    {
+        buffer.reserve(INITIAL_SIZE_OF_BUFFER);
+        *this += container;
+    }
+
+    template <typename T, std::size_t N>
+    explicit RawBuffer(T(& rawArray)[N]) requires OneByteData<T>
+    {
+        buffer.reserve(INITIAL_SIZE_OF_BUFFER);
+        *this += rawArray;
     }
 
     /**
@@ -126,37 +160,6 @@ private:
 
 
 /**
- * @brief A nested class providing helper functions for RawBuffer.
- */
-class RawBuffer::Helper
-{
-public:
-    /**
-     * @brief Prints a single byte of data.
-     * @param data The data to be printed.
-     * @param header Optional header string to be printed before the data.
-     */
-    static void printOneByteData(OneByteData auto data, const std::string& header = "")
-    {
-        printf("\n%s: 0x%02hhX\n", header.c_str(), data);
-    }
-
-    /**
-     * @brief Prints the contents of a RawBuffer.
-     * @param rawBuffer The RawBuffer object to be printed.
-     * @param header Optional header string to be printed before the buffer contents.
-     */
-    static void printBuffer(const RawBuffer& rawBuffer, const std::string& header = "")
-    {
-        printf("\n%s: ", header.c_str());
-        for (auto data : rawBuffer.getInternalBuffer())
-        {
-            printf("0x%02hhX\t", data);
-        }
-    }
-};
-
-/**
  * @brief Adds a single byte of data to the buffer.
  * @param lhs The left-hand side RawBuffer.
  * @param data The data to be added.
@@ -171,17 +174,19 @@ RawBuffer& operator+=(RawBuffer& lhs, OneByteData auto data)
 /**
  * @brief Adds a container of one-byte data to the buffer.
  * @param lhs The left-hand side RawBuffer.
- * @tparam T The type of the container.
+ * @tparam ContainerT The type of the container.
  * @param container The container with data to be added.
  * @return Reference to the modified RawBuffer object.
  */
-template <typename T>
-RawBuffer& operator+=(RawBuffer& lhs, T container) requires OneByteData<typename decltype(std::span{ container })::value_type>
+template <typename ContainerT>
+RawBuffer& operator+=(RawBuffer& lhs, const ContainerT& container)
+    requires OneByteData<typename ContainerT::value_type> && SpanConstructible<ContainerT>
 {
-    for (auto s = std::span{ container }; auto data : s)
-    {
-        lhs.push_back(data);
-    }
+    // Copy elements from the container to the RawBuffer
+    std::transform(container.begin(), container.end(), std::back_inserter(lhs), [](typename ContainerT::value_type val) {
+        return static_cast<std::byte>(val);
+    });
+
     return lhs;
 }
 
@@ -224,4 +229,37 @@ RawBuffer operator+(const RawBuffer& lhs, const RawBuffer& rhs)
     result += lhs.getInternalBuffer();
     result += rhs.getInternalBuffer();
     return result;
+}
+
+/**
+ * @brief Overload the operator<< for RawBuffer.
+ * @param os The output stream to write to.
+ * @param rawBuffer The RawBuffer object to be written.
+ * @return std::ostream& A reference to the output stream.
+ */
+std::ostream& operator<<(std::ostream& os, const RawBuffer& rawBuffer)
+{
+    for (auto data : rawBuffer.getInternalBuffer())
+    {
+        os << std::format("0x{:02X}\t", static_cast<unsigned int>(data));
+    }
+    os << '\n';
+    return os;
+}
+
+/**
+ * @brief Define the to_string function for RawBuffer.
+ * @param rawBuffer The RawBuffer object to convert to string.
+ * @param header Optional header string to be included in the output.
+ * @return std::string A string representation of the RawBuffer object.
+ */
+std::string to_string(const RawBuffer& rawBuffer, const std::string& header = "")
+{
+    std::stringstream ss;
+    if(!header.empty())
+    {
+        ss << header << ":\n";
+    }
+    ss << rawBuffer;
+    return ss.str();
 }

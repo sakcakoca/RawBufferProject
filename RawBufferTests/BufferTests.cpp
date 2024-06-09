@@ -1,4 +1,5 @@
 #include <array>
+#include <cstring>
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 #include <RawBufferHeaderOnly/RawBuffer.h>
@@ -24,6 +25,94 @@ namespace RawBufferTests
         EXPECT_EQ(rawBuffer.size(), 0);
     }
 
+    // @brief Tests adding a single byte to the buffer using the single byte constructor.
+    TEST_F(RawBufferFixture, Should_AddSingleByte_When_UsingSingleByteConstructor)
+    {
+        const auto testByte = static_cast<std::byte>(effolkronium::random_static::get<unsigned char>());
+        const RawBuffer buffer(testByte);
+
+        EXPECT_EQ(buffer.size(), 1);
+        EXPECT_THAT(buffer, ::testing::ElementsAre(testByte));
+    }
+
+    // @brief Tests adding a single byte to the buffer using the single byte constructor.
+    TEST_F(RawBufferFixture, Should_AddSingleChar_When_UsingSingleCharConstructor)
+    {
+        const auto testChar = effolkronium::random_static::get<char>();
+        const RawBuffer rawBuffer(testChar);
+
+        EXPECT_EQ(rawBuffer.size(), 1);
+        EXPECT_THAT(rawBuffer, ::testing::ElementsAre(static_cast<RawBuffer::value_type>(testChar)));
+    }
+
+    // @brief Tests adding data from a container to the buffer using the container constructor.
+    TEST_F(RawBufferFixture, Should_AddDataFromByteContainer_When_UsingContainerConstructor)
+    {
+        std::vector<std::byte> testData;
+        const size_t numberOfElementsToBePushed = effolkronium::random_static::get<unsigned short>();
+        testData.reserve(numberOfElementsToBePushed);
+
+        std::ranges::generate(testData,
+                              []() { return static_cast<std::byte>(effolkronium::random_static::get<unsigned char>()); });
+
+        const RawBuffer buffer(testData);
+
+        EXPECT_EQ(buffer.size(), testData.size());
+        EXPECT_THAT(buffer, ::testing::ElementsAreArray(testData));
+    }
+
+    // @brief Tests adding data from a container to the buffer using the container constructor.
+    TEST_F(RawBufferFixture, Should_AddDataFromCharContainer_When_UsingContainerConstructor)
+    {
+        std::vector<char> testData;
+        const size_t numberOfElementsToBePushed = effolkronium::random_static::get<unsigned short>();
+        testData.reserve(numberOfElementsToBePushed);
+
+        std::ranges::generate(testData,
+                              []() { return effolkronium::random_static::get<char>(); });
+
+        const RawBuffer rawBuffer(testData);
+
+        EXPECT_EQ(rawBuffer.size(), testData.size());
+        // Compare the content. The below test code is needed since vector holds char type and rawBuffer holds std::byte type.
+        EXPECT_THAT(rawBuffer, ::testing::Pointwise(::testing::Truly([](const auto& elements) {
+            return std::get<0>(elements) == static_cast<RawBuffer::value_type>(std::get<1>(elements));
+        }), testData));
+    }
+
+    // @brief Tests adding data from a raw array to the buffer using the raw array constructor.
+    TEST_F(RawBufferFixture, Should_AddDataFromRawByteArray_When_UsingRawArrayConstructor)
+    {
+        constexpr size_t arraySize = 800;
+        std::byte rawArrayOfByte[arraySize];
+
+        std::ranges::generate(rawArrayOfByte,
+                             []() { return static_cast<std::byte>(effolkronium::random_static::get<unsigned char>()); });
+
+        const RawBuffer rawBuffer(rawArrayOfByte);
+
+        EXPECT_EQ(rawBuffer.size(), arraySize);
+        EXPECT_THAT(rawBuffer, ::testing::ElementsAreArray(rawArrayOfByte));
+    }
+
+    // @brief Tests adding data from a raw array to the buffer using the raw array constructor.
+    TEST_F(RawBufferFixture, Should_AddDataFromRawCharArray_When_UsingRawArrayConstructor)
+    {
+        constexpr size_t arraySize = 800;
+        char rawArrayOfChar[arraySize];
+
+        std::ranges::generate(rawArrayOfChar,
+                             []() { return effolkronium::random_static::get<char>(); });
+
+        const RawBuffer rawBuffer(rawArrayOfChar);
+
+        EXPECT_EQ(rawBuffer.size(), arraySize);
+        // Compare the content. The below test code is needed since vector holds char type and rawBuffer holds std::byte type.
+        EXPECT_THAT(rawBuffer, ::testing::Pointwise(::testing::Truly([](const auto& elements) {
+            return std::get<0>(elements) == static_cast<RawBuffer::value_type>(std::get<1>(elements));
+        }), rawArrayOfChar));
+    }
+
     // @brief Tests the clear method of RawBuffer.
     TEST_F(RawBufferFixture, Should_ClearBuffer_When_ClearMethodCalled)
     {
@@ -46,7 +135,7 @@ namespace RawBufferTests
         rawBuffer += testChar;
 
         EXPECT_EQ(rawBuffer.size(), 1);
-        EXPECT_THAT(rawBuffer.getInternalBuffer(), ::testing::ElementsAre(static_cast<std::byte>(testChar)));
+        EXPECT_THAT(rawBuffer, ::testing::ElementsAre(static_cast<RawBuffer::value_type>(testChar)));
     }
 
     // @brief Tests adding a single unsigned char to the buffer.
@@ -56,7 +145,7 @@ namespace RawBufferTests
         rawBuffer += testUnsignedChar;
 
         EXPECT_EQ(rawBuffer.size(), 1);
-        EXPECT_THAT(rawBuffer.getInternalBuffer(), ::testing::ElementsAre(static_cast<std::byte>(testUnsignedChar)));
+        EXPECT_THAT(rawBuffer, ::testing::ElementsAre(static_cast<RawBuffer::value_type>(testUnsignedChar)));
     }
 
     // @brief Tests adding a vector of chars to the buffer.
@@ -133,7 +222,7 @@ namespace RawBufferTests
 
 
         EXPECT_EQ(rawBuffer.size(), spanSize);
-        EXPECT_THAT(rawBuffer.getInternalBuffer(), ::testing::ElementsAreArray(array));
+        EXPECT_THAT(rawBuffer, ::testing::ElementsAreArray(array));
     }
 
     // @brief Tests adding an array of bytes to the buffer.
@@ -150,7 +239,7 @@ namespace RawBufferTests
 
 
         EXPECT_EQ(rawBuffer.size(), arrayOfByte.size());
-        EXPECT_THAT(rawBuffer.getInternalBuffer(), ::testing::ElementsAreArray(arrayOfByte));
+        EXPECT_THAT(rawBuffer, ::testing::ElementsAreArray(arrayOfByte));
     }
 
     // @brief Tests adding a raw array of bytes to the buffer.
@@ -167,7 +256,7 @@ namespace RawBufferTests
 
 
         EXPECT_EQ(rawBuffer.size(), arraySize);
-        EXPECT_THAT(rawBuffer.getInternalBuffer(), ::testing::ElementsAreArray(rawArrayOfByte));
+        EXPECT_THAT(rawBuffer, ::testing::ElementsAreArray(rawArrayOfByte));
     }
 
     // @brief Tests adding the contents of another buffer to the buffer.
@@ -226,10 +315,10 @@ namespace RawBufferTests
     // @brief Tests the range-based for loop for RawBuffer.
     TEST_F(RawBufferFixture, Should_UseRangeBasedForLoop_When_IteratingOverBuffer)
     {
-        constexpr size_t bufferSize = 500;
-        for (size_t i = 0; i < bufferSize; i++)
+        constexpr size_t bufferSize = 120;
+        for (size_t elem = 0; elem < bufferSize; elem++)
         {
-            rawBuffer += static_cast<std::byte>(i);
+            rawBuffer += static_cast<std::byte>(elem);
         }
 
         size_t count = 0;
@@ -254,5 +343,55 @@ namespace RawBufferTests
         }
 
         EXPECT_EQ(buffer1, buffer2);
+    }
+
+    // @brief Tests the operator<< function for RawBuffer.
+    TEST_F(RawBufferFixture, Should_PrintBuffer_When_UsingOperator)
+    {
+        constexpr size_t size = 30;
+        for (size_t i = 0; i < size; i++)
+        {
+            rawBuffer += static_cast<std::byte>(effolkronium::random_static::get<unsigned char>());
+        }
+
+        // Create expected output using sprintf
+        char expectedOutput[1000] = {0};
+        for (const auto& data : rawBuffer) {
+            char temp[20] = {0};
+            std::sprintf(temp, "0x%02X\t", static_cast<unsigned int>(data));
+            std::strcat(expectedOutput, temp);
+        }
+        std::strcat(expectedOutput, "\n");
+
+        testing::internal::CaptureStdout();
+
+        std::cout << rawBuffer;
+
+        const std::string actualOutput = testing::internal::GetCapturedStdout();
+        EXPECT_EQ(actualOutput, expectedOutput);
+    }
+
+    // @brief Tests the to_string function for RawBuffer.
+    TEST_F(RawBufferFixture, Should_ReturnStringRepresentation_When_UsingToString)
+    {
+        constexpr size_t size = 30;
+        for (size_t i = 0; i < size; i++)
+        {
+            rawBuffer += static_cast<std::byte>(effolkronium::random_static::get<unsigned char>());
+        }
+
+        const std::string header = "Header";
+        // Create expected output using sprintf
+        char expectedOutput[1000] = {0};
+        std::sprintf(expectedOutput, "%s:\n", header.c_str());
+        for (const auto& data : rawBuffer) {
+            char temp[20] = {0};
+            std::sprintf(temp, "0x%02X\t", static_cast<unsigned int>(data));
+            std::strcat(expectedOutput, temp);
+        }
+        std::strcat(expectedOutput, "\n");
+
+        const std::string actualOutput = to_string(rawBuffer, header);
+        EXPECT_EQ(actualOutput, expectedOutput);
     }
 }
