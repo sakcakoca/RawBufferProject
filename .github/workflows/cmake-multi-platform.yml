@@ -104,7 +104,7 @@ jobs:
           sleep 10
         done
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-        brew install gcc-14
+        brew install gcc@14
         sudo ln -s "$(brew --prefix)/bin/gcc" /usr/local/bin/gcc
         which gcc-14
         gcc --version
