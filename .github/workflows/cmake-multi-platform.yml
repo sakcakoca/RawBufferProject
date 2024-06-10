@@ -102,6 +102,8 @@ jobs:
           echo "Waiting for Xcode Command Line Tools installation to complete..."
           sleep 10
         done
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        brew install gcc
 
     - name: Configure CMake for Clang on Ubuntu
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
@@ -113,7 +115,6 @@ jobs:
         -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
         -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
         -DCMAKE_CXX_FLAGS="-stdlib=libc++" \
-        -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON \
         -S ${{ github.workspace }}
 
     - name: Configure CMake for G++ on Ubuntu and also for Windows
@@ -125,17 +126,15 @@ jobs:
         -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
         -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
         -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
-        -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON \
         -S ${{ github.workspace }}
 
     - name: Configure CMake for macOS
-      if: matrix.os == 'macos-latest'
+      if: matrix.os == 'macos-latest'&& matrix.cpp_compiler == 'g++'
       run: >
         cmake -B ${{ steps.strings.outputs.build-output-dir }}
         -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
         -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
         -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
-        -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON \
         -S ${{ github.workspace }}
 
     - name: Build
