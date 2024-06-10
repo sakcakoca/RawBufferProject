@@ -118,7 +118,7 @@ jobs:
 
     - name: Configure CMake for Clang on Ubuntu
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
-      # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
+      # It is separate steps since -stdlib=libc++ is added as cxx flag for this configuration.
       if: matrix.os == 'ubuntu-latest' && matrix.cpp_compiler == 'clang++'
       run: >
         cmake -B ${{ steps.strings.outputs.build-output-dir }}
@@ -128,19 +128,10 @@ jobs:
         -DCMAKE_CXX_FLAGS="${CMAKE_CXX_FLAGS} -stdlib=libc++"
         -S ${{ github.workspace }}
 
-    - name: Configure CMake for G++ on Ubuntu and also for Windows
+    - name: Configure CMake for G++ on Ubuntu, and MacOS, and also for Windows
     # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
     # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
-      if: (matrix.os == 'ubuntu-latest' && matrix.cpp_compiler == 'g++') || (matrix.os == 'windows-latest')
-      run: >
-        cmake -B ${{ steps.strings.outputs.build-output-dir }}
-        -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
-        -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
-        -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
-        -S ${{ github.workspace }}
-
-    - name: Configure CMake for macOS
-      if: matrix.os == 'macos-latest'
+      if: (matrix.os == 'ubuntu-latest' && matrix.cpp_compiler == 'g++') || (matrix.os == 'windows-latest') || (matrix.os == 'macos-latest')
       run: >
         cmake -B ${{ steps.strings.outputs.build-output-dir }}
         -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
