@@ -84,7 +84,7 @@ jobs:
         sudo ./llvm.sh 18
         sudo ln -sf /usr/bin/clang-18 /usr/bin/clang
         sudo ln -sf /usr/bin/clang++-18 /usr/bin/clang++
-        clang --version\
+        clang --version
 
     - name: Update Xcode Build Tools
       if: matrix.os == 'macos-latest'
@@ -104,6 +104,8 @@ jobs:
         done
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         brew install gcc
+        gcc --version
+        clang --version
 
     - name: Configure CMake for Clang on Ubuntu
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
