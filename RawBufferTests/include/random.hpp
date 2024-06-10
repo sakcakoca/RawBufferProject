@@ -7,9 +7,13 @@
 #include <cstddef>
 #include <utility>
 
-// Custom concept to check if a type is std::byte
+// Custom concept to check if a type is std::byte, char, or unsigned char
 template<typename T>
-concept ByteType = std::same_as<T, std::byte>;
+concept ByteOrCharType = std::same_as<T, std::byte> || std::same_as<T, char> || std::same_as<T, unsigned char>;
+
+// Custom concept to check for integral types excluding char, unsigned char, std::byte, etc.
+template<typename T>
+concept IntegralExcludingCharAndByteType = std::integral<T> && !ByteOrCharType<T>;
 
 struct Random
 {
@@ -24,8 +28,7 @@ struct Random
      * @note Allow both: 'from' <= 'to' and 'from' >= 'to'
      * @note Prevent implicit type conversion
      */
-    template <typename T>
-    requires std::integral<T>
+    template <IntegralExcludingCharAndByteType T>
     static T get(T from = std::numeric_limits<T>::min(),
         T to = std::numeric_limits<T>::max())
     {
@@ -41,22 +44,23 @@ struct Random
     }
 
     /**
-     * @brief Generate a random std::byte number in a [from; to] range
+     * @brief Generate a random value for std::byte, char, or unsigned char in a [from; to] range
      *        by std::uniform_int_distribution
-     * @param from The first limit number of a random range (default is std::byte{0})
-     * @param to The second limit number of a random range (default is std::byte{255})
-     * @return A random std::byte number in a [from; to] range
+     * @tparam T The type of the value (std::byte, char, or unsigned char)
+     * @param from The first limit number of a random range, 0 by default
+     * @param to The second limit number of a random range, 255 by default
+     * @return A random value in a [from; to] range
      * @note Allow both: 'from' <= 'to' and 'from' >= 'to'
      * @note Prevent implicit type conversion
      */
-    template <ByteType T = std::byte>
-    static T get(T from = T{std::numeric_limits<std::underlying_type_t<T>>::min()},
-                 T to = T{std::numeric_limits<std::underlying_type_t<T>>::max()})
+    template <ByteOrCharType T>
+    static T get(T from = T{std::numeric_limits<T>::min( )},
+                 T to = T{std::numeric_limits<T>::max( )})
     {
-        using UnderlyingType = std::underlying_type_t<T>;
-        auto from_value = static_cast<UnderlyingType>(from);
-        auto to_value = static_cast<UnderlyingType>(to);
+        using short_t = std::conditional_t<std::is_signed_v<T>, short, unsigned short>;
+        auto from_value = static_cast<short_t>(from);
+        auto to_value = static_cast<short_t>(to);
 
-        return static_cast<T>(get<UnderlyingType>(from_value, to_value));
+        return static_cast<T>(get<short_t>(from_value, to_value));
     }
 };
