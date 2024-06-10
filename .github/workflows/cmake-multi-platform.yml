@@ -23,16 +23,10 @@ jobs:
       #
       # To add more build types (Release, Debug, RelWithDebInfo, etc.) customize the build_type list.
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest]
         build_type: [Release]
-        c_compiler: [gcc, clang, cl]
+        c_compiler: [clang]
         include:
-          - os: windows-latest
-            c_compiler: cl
-            cpp_compiler: cl
-          - os: ubuntu-latest
-            c_compiler: gcc
-            cpp_compiler: g++
           - os: ubuntu-latest
             c_compiler: clang
             cpp_compiler: clang++
@@ -69,11 +63,15 @@ jobs:
     - name: Install Clang on Ubuntu
       if: matrix.os == 'ubuntu-latest' && matrix.cpp_compiler == 'clang++'
       run: |
-        wget https://apt.llvm.org/llvm.sh
-        chmod +x llvm.sh
-        sudo ./llvm.sh 18
-        sudo ln -sf /usr/bin/clang-18 /usr/bin/clang
-        sudo ln -sf /usr/bin/clang++-18 /usr/bin/clang++
+        sudo apt-get remove clang -y
+        sudo apt-get remove libstdc++* -y
+        sudo apt-get remove libgcc* -y
+        sudo bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
+        #wget https://apt.llvm.org/llvm.sh
+        #chmod +x llvm.sh
+        #sudo ./llvm.sh 18
+        #sudo ln -sf /usr/bin/clang-18 /usr/bin/clang
+        #sudo ln -sf /usr/bin/clang++-18 /usr/bin/clang++
         clang --version
 
     - name: Configure CMake
