@@ -86,11 +86,22 @@ jobs:
         sudo ln -sf /usr/bin/clang++-18 /usr/bin/clang++
         clang --version\
 
-    - name: Install Xcode on MacOS
+    - name: Update Xcode Build Tools
       if: matrix.os == 'macos-latest'
-      uses: actions/setup-xcode@v2
-      with:
-        xcode-version: 'latest' # Install the latest version of Xcode
+      run: |
+        # Install Xcode Command Line Tools
+        xcode-select --install || true
+
+        # Wait until installation is complete
+        while true; do
+          xcode-select -p
+          if [ $? -eq 0 ]; then
+            echo "Xcode Command Line Tools installed successfully."
+            break
+          fi
+          echo "Waiting for Xcode Command Line Tools installation to complete..."
+          sleep 10
+        done
 
     - name: Configure CMake for Clang on Ubuntu
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
