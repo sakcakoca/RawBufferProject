@@ -63,14 +63,15 @@ jobs:
     - name: Install Clang on Ubuntu
       if: matrix.os == 'ubuntu-latest' && matrix.cpp_compiler == 'clang++'
       run: |
+        sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+        sudo apt-get update
+        sudo apt-get install --only-upgrade libstdc++6
         wget https://apt.llvm.org/llvm.sh
         chmod +x llvm.sh
         sudo ./llvm.sh 18
         sudo ln -sf /usr/bin/clang-18 /usr/bin/clang
         sudo ln -sf /usr/bin/clang++-18 /usr/bin/clang++
         clang --version
-        clang++ --version
-        g++ --version
 
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
