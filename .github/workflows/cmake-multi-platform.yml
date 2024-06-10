@@ -105,8 +105,9 @@ jobs:
         done
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         brew install gcc@14
-        sudo ln -s "$(brew --prefix)/bin/gcc" /usr/local/bin/gcc
+        sudo ln -s $(which gcc-14) /usr/local/bin/gcc
         which gcc-14
+        which gcc
         gcc --version
         clang --version
 
@@ -134,7 +135,7 @@ jobs:
         -S ${{ github.workspace }}
 
     - name: Configure CMake for macOS
-      if: matrix.os == 'macos-latest'&& matrix.cpp_compiler == 'g++'
+      if: matrix.os == 'macos-latest'
       run: >
         cmake -B ${{ steps.strings.outputs.build-output-dir }}
         -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
