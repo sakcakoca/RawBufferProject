@@ -55,23 +55,26 @@ jobs:
         echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
 
 
-    - name: Install GCC 14 on Ubuntu
+    - name: Install GCC on Ubuntu
       if: matrix.os == 'ubuntu-latest' && matrix.cpp_compiler == 'g++'
       run: |
         sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
         sudo apt-get update
-        sudo apt-get install gcc-14 g++-14 -y
+        sudo apt-get install gcc-14 g++-14 -y || sudo apt-get install gcc-13 g++-13 -y
         sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-14 60 \
+                                --slave /usr/bin/g++ g++ /usr/bin/g++-14 || \
+                                sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-13 60 \
+                                --slave /usr/bin/g++ g++ /usr/bin/g++-13
 
-                                --slave /usr/bin/g++ g++ /usr/bin/g++-14
-
-    - name: Install Clang 18 on Ubuntu
+    - name: Install Clang on Ubuntu
       if: matrix.os == 'ubuntu-latest' && matrix.cpp_compiler == 'clang++'
       run: |
         sudo apt-get update
-        sudo apt-get install clang-18 -y
+        sudo apt-get install clang-18 -y || sudo apt-get install clang-16 -y
         sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-18 60 \
-                                --slave /usr/bin/clang++ clang++ /usr/bin/clang++-18
+                                --slave /usr/bin/clang++ clang++ /usr/bin/clang++-18 || \
+                                sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-16 60 \
+                                --slave /usr/bin/clang++ clang++ /usr/bin/clang++-16
 
 
     - name: Configure CMake
