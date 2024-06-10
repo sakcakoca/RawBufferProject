@@ -79,6 +79,7 @@ jobs:
         -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
         -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
         -DCMAKE_CXX_FLAGS="-stdlib=libstdc++" \
+        -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON \
         -S ${{ github.workspace }}
 
     - name: Build
