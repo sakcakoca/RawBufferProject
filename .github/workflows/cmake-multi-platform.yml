@@ -69,6 +69,8 @@ jobs:
         sudo ln -sf /usr/bin/clang-18 /usr/bin/clang
         sudo ln -sf /usr/bin/clang++-18 /usr/bin/clang++
         clang --version
+        wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
+        apt-get install libc++-18-dev libc++abi-18-dev
 
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
