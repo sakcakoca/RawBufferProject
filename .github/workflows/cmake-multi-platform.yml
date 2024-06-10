@@ -110,7 +110,7 @@ jobs:
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         brew install gcc@14
         sudo ln -s $(which gcc-14) /usr/local/bin/gcc
-        sudo ln -s $(which gcc-14) /usr/local/bin/++
+        sudo ln -s $(which gcc-14) /usr/bin/g++
         which gcc
         which g++
         gcc --version
