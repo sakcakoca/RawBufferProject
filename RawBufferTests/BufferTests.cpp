@@ -1,5 +1,7 @@
 #include <array>
+#include <string>
 #include <cstring>
+#include <cstdio>
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 #include <RawBufferHeaderOnly/RawBuffer.h>
@@ -358,10 +360,10 @@ namespace RawBufferTests
         char expectedOutput[1000] = {0};
         for (const auto& data : rawBuffer) {
             char temp[20] = {0};
-            std::sprintf(temp, "0x%02X\t", static_cast<unsigned int>(data));
-            std::strcat(expectedOutput, temp);
+			std::snprintf(temp, sizeof(temp), "0x%02X\t", static_cast<unsigned int>(data));
+        	std::strncat(expectedOutput, temp, sizeof(expectedOutput) - strlen(expectedOutput) - 1);
         }
-        std::strcat(expectedOutput, "\n");
+		std::strncat(expectedOutput, "\n", sizeof(expectedOutput) - strlen(expectedOutput) - 1);
 
         testing::internal::CaptureStdout();
 
@@ -383,13 +385,13 @@ namespace RawBufferTests
         const std::string header = "Header";
         // Create expected output using sprintf
         char expectedOutput[1000] = {0};
-        std::sprintf(expectedOutput, "%s:\n", header.c_str());
+        std::snprintf(expectedOutput, sizeof(expectedOutput), "%s:\n", header.c_str());
         for (const auto& data : rawBuffer) {
             char temp[20] = {0};
-            std::sprintf(temp, "0x%02X\t", static_cast<unsigned int>(data));
-            std::strcat(expectedOutput, temp);
+            std::snprintf(temp, sizeof(temp), "0x%02X\t", static_cast<unsigned int>(data));
+        	std::strncat(expectedOutput, temp, sizeof(expectedOutput) - strlen(expectedOutput) - 1);
         }
-        std::strcat(expectedOutput, "\n");
+        std::strncat(expectedOutput, "\n", sizeof(expectedOutput) - strlen(expectedOutput) - 1);
 
         const std::string actualOutput = to_string(rawBuffer, header);
         EXPECT_EQ(actualOutput, expectedOutput);
