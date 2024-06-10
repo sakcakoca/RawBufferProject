@@ -178,7 +178,7 @@ RawBuffer& operator+=(RawBuffer& lhs, const ContainerT& container)
     requires OneByteData<typename ContainerT::value_type> && SpanConstructible<ContainerT>
 {
     // Copy elements from the container to the RawBuffer
-    std::transform(container.begin(), container.end(), std::back_inserter(lhs), [](typename ContainerT::value_type val) {
+    std::ranges::transform(container, std::back_inserter(lhs), [](typename ContainerT::value_type val) {
         return static_cast<std::byte>(val);
     });
 
