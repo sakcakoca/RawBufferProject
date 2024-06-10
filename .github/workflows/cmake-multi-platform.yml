@@ -70,7 +70,9 @@ jobs:
       if: matrix.os == 'ubuntu-latest' && matrix.cpp_compiler == 'clang++'
       run: |
         sudo apt-get update
-        sudo apt-get install clang-18 -y || sudo apt-get install clang-16 -y
+        wget https://apt.llvm.org/llvm.sh
+        chmod +x llvm.sh
+        sudo ./llvm.sh all
         sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-18 60 \
                                 --slave /usr/bin/clang++ clang++ /usr/bin/clang++-18 || \
                                 sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-16 60 \
