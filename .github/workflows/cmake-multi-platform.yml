@@ -72,11 +72,9 @@ jobs:
         sudo apt-get update
         wget https://apt.llvm.org/llvm.sh
         chmod +x llvm.sh
-        sudo ./llvm.sh all
-        sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-18 60 \
-                                --slave /usr/bin/clang++ clang++ /usr/bin/clang++-18 || \
-                                sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-16 60 \
-                                --slave /usr/bin/clang++ clang++ /usr/bin/clang++-16
+        sudo ./llvm.sh 18
+        sudo ln -sf /usr/bin/clang-18 /usr/bin/clang
+        sudo ln -sf /usr/bin/clang++-18 /usr/bin/clang++
 
 
     - name: Configure CMake
