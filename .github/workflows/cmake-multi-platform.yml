@@ -58,8 +58,8 @@ jobs:
     - name: Install GCC on Ubuntu
       if: matrix.os == 'ubuntu-latest' && matrix.cpp_compiler == 'g++'
       run: |
-        sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
-        sudo add-apt-repository universe -y
+        #sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+        sudo add-apt-repository universe
         sudo apt-get update
         sudo apt-get install gcc-14 g++-14 -y || sudo apt-get install gcc-13 g++-13 -y
         sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-14 60 \
