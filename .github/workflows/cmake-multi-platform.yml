@@ -63,9 +63,7 @@ jobs:
     - name: Install Clang on Ubuntu
       if: matrix.os == 'ubuntu-latest' && matrix.cpp_compiler == 'clang++'
       run: |
-        wget https://apt.llvm.org/llvm.sh
-        chmod +x llvm.sh
-        sudo ./llvm.sh all
+        bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
         sudo ln -sf /usr/bin/clang-18 /usr/bin/clang
         sudo ln -sf /usr/bin/clang++-18 /usr/bin/clang++
         clang --version
