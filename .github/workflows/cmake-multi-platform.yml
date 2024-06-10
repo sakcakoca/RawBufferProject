@@ -90,7 +90,8 @@ jobs:
       if: matrix.os == 'macos-latest'
       run: |
         # Install Xcode Command Line Tools
-        xcode-select --install || true
+        sudo xcode-select --install || true
+        sudo xcode-select --switch /Applications/Xcode_15.4.app/Contents/Developer
 
         # Wait until installation is complete
         while true; do
@@ -103,8 +104,9 @@ jobs:
           sleep 10
         done
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-        brew install gcc
+        sudo brew install gcc-14
         sudo ln -s "$(brew --prefix)/bin/gcc" /usr/local/bin/gcc
+        which gcc-14
         gcc --version
         clang --version
 
