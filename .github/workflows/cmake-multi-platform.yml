@@ -23,7 +23,7 @@ jobs:
       #
       # To add more build types (Release, Debug, RelWithDebInfo, etc.) customize the build_type list.
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest, windows-latest, macos-latest]
         build_type: [Release]
         c_compiler: [gcc, clang, cl]
         include:
@@ -36,12 +36,20 @@ jobs:
           - os: ubuntu-latest
             c_compiler: clang
             cpp_compiler: clang++
+          - os: macos-latest
+            c_compiler: gcc
+            cpp_compiler: g++
+          - os: macos-latest
+            c_compiler: clang
+            cpp_compiler: clang++
         exclude:
           - os: windows-latest
             c_compiler: gcc
           - os: windows-latest
             c_compiler: clang
           - os: ubuntu-latest
+            c_compiler: cl
+          - os: macos-latest
             c_compiler: cl
 
     steps:
@@ -76,7 +84,13 @@ jobs:
         sudo ./llvm.sh 18
         sudo ln -sf /usr/bin/clang-18 /usr/bin/clang
         sudo ln -sf /usr/bin/clang++-18 /usr/bin/clang++
-        clang --version
+        clang --version\
+
+    - name: Install Xcode on MacOS
+      if: matrix.os == 'macos-latest'
+      uses: actions/setup-xcode@v2
+      with:
+        xcode-version: 'latest' # Install the latest version of Xcode
 
     - name: Configure CMake for Clang on Ubuntu
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
@@ -95,6 +109,16 @@ jobs:
     # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
     # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
       if: (matrix.os == 'ubuntu-latest' && matrix.cpp_compiler == 'g++') || (matrix.os == 'windows-latest')
+      run: >
+        cmake -B ${{ steps.strings.outputs.build-output-dir }}
+        -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
+        -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
+        -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+        -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON \
+        -S ${{ github.workspace }}
+
+    - name: Configure CMake for macOS
+      if: matrix.os == 'macos-latest'
       run: >
         cmake -B ${{ steps.strings.outputs.build-output-dir }}
         -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
