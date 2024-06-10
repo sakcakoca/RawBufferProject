@@ -22,4 +22,47 @@ Windows on Appveyor  | [![Windows Build status](https://ci.appveyor.com/api/proj
 
 
 # RawBufferProject
+
+RawBufferProject is a header-only C++ library for managing raw byte data buffers.
 General purpose buffer to store data read from TCP, UDP, SerialChannel, CAN, 1553, etc.
+
+## Usage
+
+### Installation
+
+Since this is a header-only library, you only need to include the `RawBuffer.h` header file in your project.
+
+### Getting Started
+
+1. Include the `RawBuffer.h` header file in your project:
+
+```cpp
+#include "RawBuffer.h"
+```
+
+2. Use the RawBuffer class to manage raw byte data:
+
+```cpp
+// Example usage
+RawBuffer buffer;
+
+// Add single byte
+buffer.push_back(0xAB);
+
+// Add multiple bytes from a container
+std::vector<unsigned char> data = {0x01, 0x02, 0x03};
+buffer += data;
+
+// Add bytes from a C-style array
+unsigned char rawArray[] = {0xAA, 0xBB, 0xCC};
+buffer += rawArray;
+
+// Print buffer content
+std::cout << buffer;
+```
+
+## Features
+
+* Easily manage raw byte data buffers.
+* Supports adding single bytes, containers, and C-style arrays.
+* Iterators for traversal and manipulation of buffer contents.
