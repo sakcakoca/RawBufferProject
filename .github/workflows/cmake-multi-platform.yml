@@ -63,11 +63,6 @@ jobs:
     - name: Install Clang on Ubuntu
       if: matrix.os == 'ubuntu-latest' && matrix.cpp_compiler == 'clang++'
       run: |
-        sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
-        sudo apt-get update
-        sudo apt-get install gcc-14 g++-14 -y
-        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-14 60 \
-                                --slave /usr/bin/g++ g++ /usr/bin/g++-14
         wget https://apt.llvm.org/llvm.sh
         chmod +x llvm.sh
         sudo ./llvm.sh 18
@@ -83,7 +78,7 @@ jobs:
         -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
         -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
         -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
-        -DCMAKE_CXX_FLAGS="-stdlib=libstdc++" \
+        -DCMAKE_CXX_FLAGS="-stdlib=libc++" \
         -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON \
         -S ${{ github.workspace }}
 
