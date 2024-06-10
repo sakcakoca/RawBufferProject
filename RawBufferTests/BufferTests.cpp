@@ -12,7 +12,7 @@ namespace RawBufferTests
     // @brief Fixture for RawBuffer tests
     class RawBufferFixture : public ::testing::Test
     {
-    protected:
+    public:
         void SetUp() override
         {
             rawBuffer.clear();
@@ -30,7 +30,7 @@ namespace RawBufferTests
     // @brief Tests adding a single byte to the buffer using the single byte constructor.
     TEST_F(RawBufferFixture, Should_AddSingleByte_When_UsingSingleByteConstructor)
     {
-        const auto testByte = static_cast<std::byte>(effolkronium::random_static::get<unsigned char>());
+        const auto testByte = Random::get<std::byte>();
         const RawBuffer buffer(testByte);
 
         EXPECT_EQ(buffer.size(), 1);
@@ -40,7 +40,7 @@ namespace RawBufferTests
     // @brief Tests adding a single byte to the buffer using the single byte constructor.
     TEST_F(RawBufferFixture, Should_AddSingleChar_When_UsingSingleCharConstructor)
     {
-        const auto testChar = effolkronium::random_static::get<char>();
+        const auto testChar = Random::get<char>();
         const RawBuffer rawBuffer(testChar);
 
         EXPECT_EQ(rawBuffer.size(), 1);
@@ -51,11 +51,11 @@ namespace RawBufferTests
     TEST_F(RawBufferFixture, Should_AddDataFromByteContainer_When_UsingContainerConstructor)
     {
         std::vector<std::byte> testData;
-        const size_t numberOfElementsToBePushed = effolkronium::random_static::get<unsigned short>();
+        const auto numberOfElementsToBePushed = static_cast<std::size_t>(Random::get<unsigned short>());
         testData.reserve(numberOfElementsToBePushed);
 
         std::ranges::generate(testData,
-                              []() { return static_cast<std::byte>(effolkronium::random_static::get<unsigned char>()); });
+                              []() { return Random::get<std::byte>(); });
 
         const RawBuffer buffer(testData);
 
@@ -67,11 +67,11 @@ namespace RawBufferTests
     TEST_F(RawBufferFixture, Should_AddDataFromCharContainer_When_UsingContainerConstructor)
     {
         std::vector<char> testData;
-        const size_t numberOfElementsToBePushed = effolkronium::random_static::get<unsigned short>();
+        constexpr size_t numberOfElementsToBePushed = 350;
         testData.reserve(numberOfElementsToBePushed);
 
         std::ranges::generate(testData,
-                              []() { return effolkronium::random_static::get<char>(); });
+                              []() { return Random::get<char>(); });
 
         const RawBuffer rawBuffer(testData);
 
@@ -89,7 +89,7 @@ namespace RawBufferTests
         std::byte rawArrayOfByte[arraySize];
 
         std::ranges::generate(rawArrayOfByte,
-                             []() { return static_cast<std::byte>(effolkronium::random_static::get<unsigned char>()); });
+                             []() { return Random::get<std::byte>(); });
 
         const RawBuffer rawBuffer(rawArrayOfByte);
 
@@ -104,7 +104,7 @@ namespace RawBufferTests
         char rawArrayOfChar[arraySize];
 
         std::ranges::generate(rawArrayOfChar,
-                             []() { return effolkronium::random_static::get<char>(); });
+                             []() { return Random::get<char>(); });
 
         const RawBuffer rawBuffer(rawArrayOfChar);
 
@@ -133,7 +133,7 @@ namespace RawBufferTests
     // @brief Tests adding a single char to the buffer.
     TEST_F(RawBufferFixture, Should_AddChar_When_AddingSingleChar)
     {
-        const char testChar = effolkronium::random_static::get<char>();
+        const char testChar = Random::get<char>();
         rawBuffer += testChar;
 
         EXPECT_EQ(rawBuffer.size(), 1);
@@ -143,7 +143,7 @@ namespace RawBufferTests
     // @brief Tests adding a single unsigned char to the buffer.
     TEST_F(RawBufferFixture, Should_AddUnsignedChar_When_AddingSingleUnsignedChar)
     {
-        const unsigned char testUnsignedChar = effolkronium::random_static::get<unsigned char>();
+        const unsigned char testUnsignedChar = Random::get<unsigned char>();
         rawBuffer += testUnsignedChar;
 
         EXPECT_EQ(rawBuffer.size(), 1);
@@ -154,11 +154,11 @@ namespace RawBufferTests
     TEST_F(RawBufferFixture, Should_AddVectorOfChar_When_AddingVectorOfChar)
     {
         std::vector<char> vectorOfChar;
-        const size_t numberOfElementsToBePushed = effolkronium::random_static::get<unsigned short>();
+        constexpr size_t numberOfElementsToBePushed = 487;
         vectorOfChar.reserve(numberOfElementsToBePushed); // Reserve space for efficiency
 
         std::ranges::generate(vectorOfChar,
-                              []() { return effolkronium::random_static::get<char>(); });
+                              []() { return Random::get<char>(); });
 
         rawBuffer += vectorOfChar;
 
@@ -177,7 +177,7 @@ namespace RawBufferTests
         std::array<char, arraySize> arrayOfChar{};
 
         std::ranges::generate(arrayOfChar,
-                              []() { return effolkronium::random_static::get<char>(); });
+                              []() { return Random::get<char>(); });
 
 
         rawBuffer += arrayOfChar;
@@ -197,7 +197,7 @@ namespace RawBufferTests
         char rawArrayOfChar[arraySize] = { 0 };
 
         std::ranges::generate(rawArrayOfChar,
-                              []() { return effolkronium::random_static::get<char>(); });
+                              []() { return Random::get<char>(); });
 
 
         rawBuffer += rawArrayOfChar;
@@ -216,7 +216,7 @@ namespace RawBufferTests
         std::array<std::byte, spanSize> array{};
 
         std::ranges::generate(array,
-                              []() { return static_cast<std::byte>(effolkronium::random_static::get<unsigned char>()); });
+                              []() { return Random::get<std::byte>(); });
 
 
         const std::span<std::byte> span{array};
@@ -234,7 +234,7 @@ namespace RawBufferTests
         std::array<std::byte, arraySize> arrayOfByte{};
 
         std::ranges::generate(arrayOfByte,
-                             []() { return static_cast<std::byte>(effolkronium::random_static::get<unsigned char>()); });
+                             []() { return Random::get<std::byte>(); });
 
 
         rawBuffer += arrayOfByte;
@@ -251,7 +251,7 @@ namespace RawBufferTests
         std::byte rawArrayOfByte[arraySize];
 
         std::ranges::generate(rawArrayOfByte,
-                             []() { return static_cast<std::byte>(effolkronium::random_static::get<unsigned char>()); });
+                             []() { return Random::get<std::byte>(); });
 
 
         rawBuffer += rawArrayOfByte;
@@ -264,18 +264,18 @@ namespace RawBufferTests
     // @brief Tests adding the contents of another buffer to the buffer.
     TEST_F(RawBufferFixture, Should_AddContentsOfAnotherBuffer_When_AddingAnotherBuffer)
     {
-        const size_t initialSize = effolkronium::random_static::get<unsigned short>();
+        const auto initialSize = static_cast<size_t>(Random::get<unsigned short>());
         for (size_t i = 0; i < initialSize; i++)
         {
-            rawBuffer += effolkronium::random_static::get<unsigned char>();
+            rawBuffer += Random::get<unsigned char>();
         }
         std::vector<std::byte> initialBuffer{rawBuffer.begin(), rawBuffer.end()};
 
         RawBuffer otherRawBuffer;
-        const size_t sizeOfOtherRawBuffer = effolkronium::random_static::get<unsigned short>();
+        const auto sizeOfOtherRawBuffer = static_cast<size_t>(Random::get<unsigned short>());
         for (size_t i = 0; i < sizeOfOtherRawBuffer; i++)
         {
-            otherRawBuffer += effolkronium::random_static::get<unsigned char>();
+            otherRawBuffer += Random::get<unsigned char>();
         }
 
         rawBuffer += otherRawBuffer;
@@ -297,11 +297,11 @@ namespace RawBufferTests
         constexpr size_t size2 = 2000;
         for (size_t i = 0; i < size1; i++)
         {
-            buffer1 += effolkronium::random_static::get<unsigned char>();
+            buffer1 += Random::get<unsigned char>();
         }
         for (size_t i = 0; i < size2; i++)
         {
-            buffer2 += effolkronium::random_static::get<unsigned char>();
+            buffer2 += Random::get<unsigned char>();
         }
 
         const RawBuffer concatenatedBuffer = buffer1 + buffer2;
@@ -339,7 +339,7 @@ namespace RawBufferTests
         constexpr size_t size = 100;
         for (size_t i = 0; i < size; i++)
         {
-            const auto element = static_cast<std::byte>(effolkronium::random_static::get<unsigned char>());
+            const auto element = Random::get<std::byte>();
             buffer1 += element;
             buffer2 += element;
         }
@@ -353,7 +353,7 @@ namespace RawBufferTests
         constexpr size_t size = 30;
         for (size_t i = 0; i < size; i++)
         {
-            rawBuffer += static_cast<std::byte>(effolkronium::random_static::get<unsigned char>());
+            rawBuffer += Random::get<std::byte>();
         }
 
         // Create expected output using sprintf
@@ -379,7 +379,7 @@ namespace RawBufferTests
         constexpr size_t size = 30;
         for (size_t i = 0; i < size; i++)
         {
-            rawBuffer += static_cast<std::byte>(effolkronium::random_static::get<unsigned char>());
+            rawBuffer += Random::get<std::byte>();
         }
 
         const std::string header = "Header";
