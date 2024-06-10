@@ -1,10 +1,17 @@
 
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=sakcakoca_RawBufferProject&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=sakcakoca_RawBufferProject)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=sakcakoca_RawBufferProject&metric=bugs)](https://sonarcloud.io/summary/new_code?id=sakcakoca_RawBufferProject)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=sakcakoca_RawBufferProject&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=sakcakoca_RawBufferProject)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=sakcakoca_RawBufferProject&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=sakcakoca_RawBufferProject)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=sakcakoca_RawBufferProject&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=sakcakoca_RawBufferProject)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/832fd9eab7d644e9bc3e80ed8408631f)](https://www.codacy.com/gh/sakcakoca/RawBufferProject/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=sakcakoca/RawBufferProject&amp;utm_campaign=Badge_Grade)
 [![codecov](https://codecov.io/gh/sakcakoca/RawBufferProject/branch/master/graph/badge.svg?token=X4W14HNP37)](https://codecov.io/gh/sakcakoca/RawBufferProject)
 <a href="https://scan.coverity.com/projects/sakcakoca-rawbufferproject">
   <img alt="Coverity Scan Build Status"
        src="https://scan.coverity.com/projects/23025/badge.svg"/>
 </a>
+
+<!-- Sonar Cloud setup is done with https://sonarcloud.io/projects/create link. It is free for public repos. -->
 
 Platform | CI Status
 ---------|:---------
